@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sudo systemctl stop flaskapp
+
+wait
+echo 'Stopped flaskapp'
+sudo systemctl start flaskapp
+
+wait
+echo 'Started flaskapp'
+
+sudo systemctl status flaskapp
+
+

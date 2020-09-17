@@ -1,0 +1,10 @@
+# (myprojectenv) sparkbot@ubuntu-bionic-1:~/dncreate_sparkbot$ cat /etc/nginx/sites-available/flaskapp
+server {
+    listen 80;
+    server_name auto-bot.net www.auto-bot.net;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/sparkbot/dncreate_sparkbot/flaskapp.sock;
+    }
+}

@@ -1,0 +1,18 @@
+# (myprojectenv) sparkbot@ubuntu-bionic-1:~/myproject$ cat /etc/systemd/system/flaskapp.service
+[Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+
+[Service]
+User=sparkbot
+Group=www-data
+
+
+WorkingDirectory=/home/sparkbot/dncreate_sparkbot
+Environment="PATH=/home/sparkbot/myproject/myprojectenv/bin"
+ExecStart=/home/sparkbot/myproject/myprojectenv/bin/uwsgi --ini flaskapp.ini
+
+
+[Install]
+WantedBy=multi-user.target
