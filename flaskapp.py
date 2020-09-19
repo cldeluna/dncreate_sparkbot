@@ -209,42 +209,22 @@ def l3_sum(incoming_msg):
     :return:
     """
 
-    # Get sent message
-    msg = ''
-    message = incoming_msg.text.split()
-
     # Lookup details about sender
     sender = app.teams.people.get(incoming_msg.personId)
     room = app.teams.rooms.get(incoming_msg.roomId)
 
-    # if length of split message is greater than 2 elements then the function is being passed a site id parameter
-    if len(message) > 2:
-        siteid = message[2]
-        room_title = siteid
-    # Otherwise extract site id from room information
-    else:
-        site_id, id_match = get_siteid(room)
-        room_title = room.title
+    room_title = room.title
 
-    regexp = r"\d{4}"
-    match = re.search(regexp, room_title)
-
-    if match:
-        site_id = match.group()
-        response_data = bot_functions.conn_matrix(site_id)
-    else:
-        site_id = f"ERROR"
-        response_data = f"ERROR:  Bot function was passed something that was not understood: {incoming_msg.text}.  " \
-            f"\n\rIf you are not in an NT3 space please provide the 4 digit site code."
-
-    # response_data += f"match is {match}\nsite_id is {site_id}\n room_title is {room_title}"
+    l3_device, l3_int_list = bot_functions.l3_ints(incoming_msg)
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
-    response.markdown = f"\n{response_data}\n"
+    response.markdown = f"\nlayer 3 Interfaces for device {l3_device}\n"
 
-    if match:
-        response.files = f"./{site_id}_sdwan_report.txt"
+    for line in l3_int_list:
+        response.markdown += f"{line}\n"
+
+    response.files = f"./{l3_device}_int_report.txt"
 
     return response
 

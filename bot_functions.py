@@ -24,6 +24,7 @@ import difflib
 import requests
 import dotenv
 import json
+import netmiko
 
 
 def get_time(msg):
@@ -88,6 +89,60 @@ def rest_api_call(url, payload={}, cookie="", type="GET", content_type="text/pla
     # print(response.json())
 
     return response
+
+
+def l3_ints(msg):
+
+    #  Define Environment
+    # os.environ["NET_TEXTFSM"] = "./ntc-templates/templates"
+    user = os.environ.get('NXOS_USER')
+    pwd = os.environ.get('NXOS_PWD')
+    sec = os.environ.get('NXOS_PWD')
+
+    # Extract the message content, without the command "/xxxx"
+    # message = msg.text.split()
+    message = msg.split()
+    device = message[2].strip()
+    print(device)
+
+    dev = {
+        'device_type': 'cisco_nxos',
+        'ip' : 'sbx-nxos-mgmt.cisco.com',
+        'username' : user,
+        'password' : pwd,
+        'secret' : sec,
+        'port' : 8181
+    }
+    l3_ints_list = []
+    if device == dev['ip']:
+
+        print(f"\n===============  Netmiko with TEXTFSM OPTION  ===============")
+
+        try:
+            dev_conn = netmiko.ConnectHandler(**dev)
+            dev_conn.enable()
+            response = dev_conn.send_command('show ip route', use_textfsm=True)
+            # print(f"\nResponse is of type {type(response)}\n")
+            # print(response)
+            # print(len(response))
+
+            for dev_int in response:
+                # print(f"{json.dumps(dev_int, indent=4, sort_keys=True)}")
+                if dev_int['protocol'] == "direct" or dev_int['protocol'] == "local":
+                    interface_text = f"{dev_int['nexthop_if']}   {dev_int['network']}/{dev_int['mask']}    {dev_int['nexthop_ip']}    {dev_int['vrf']}"
+                    l3_ints_list.append(interface_text)
+
+            return device, l3_ints_list
+
+        except Exception as e:
+            print(f"Exception: {e}")
+            l3_ints_list.append(f"Error Connecting to device {device}!")
+            return device, l3_ints_list
+
+    else:
+        print("Device Not in Topology. Unknown Device.")
+        l3_ints_list.append(f"Device {device} Not in Topology. Unknown Device.")
+        return device, l3_ints_list
 
 
 def diff_config_processing(dev_action, site_id):
@@ -321,7 +376,6 @@ def read_nsrequestfile_payload(path, debug=False):
             print(f"==== {line}")
 
     return rows_w_data
-
 
 
 def new_subnets(siteid):
@@ -691,8 +745,6 @@ def subnets_requested(siteid):
     return summary_string
 
 
-
-
 def check_dropbox():
 
     '''
@@ -931,6 +983,12 @@ def check_ips(siteid):
 def main():
 
     print("Called Directly.\nIn MAIN...")
+
+    dotenv.load_dotenv()
+    device, l3 = l3_ints("Sparkbot /l3sum sbx-nxos-mgmt.cisco.com")
+    print(device)
+    print(l3)
+
 
 # Standard call to the main() function.
 if __name__ == '__main__':
