@@ -7,3 +7,4 @@ test*
 env*
 flaskapp.sock
 .env
+ntc-templates/*
