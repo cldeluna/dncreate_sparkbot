@@ -100,8 +100,8 @@ def l3_ints(msg):
     sec = os.environ.get('NXOS_PWD')
 
     # Extract the message content, without the command "/xxxx"
-    # message = msg.text.split()
-    message = msg.split()
+    message = msg.text.split()
+    # message = msg.split()
     device = message[2].strip()
     print(device)
 
