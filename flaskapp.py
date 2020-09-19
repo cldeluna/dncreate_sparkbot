@@ -219,7 +219,8 @@ def l3_sum(incoming_msg):
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
-    response.markdown = f"\nlayer 3 Interfaces for device {l3_device}\n"
+    response.markdown = f"### Layer 3 Interfaces for device {l3_device}\n"
+    response.markdown += f"Int    Network/Mask    IP    VRF\n"
 
     for line in l3_int_list:
         response.markdown += f"{line}\n"
