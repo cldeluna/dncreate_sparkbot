@@ -33,43 +33,22 @@ def get_time(msg):
     :return: A Response object based reply
     """
     # Extract the message content, without the command "/time"
-
-    # message = msg.text.split()
-    message = msg.split()
+    message = msg.text.split()
     timezone = message[2]
     print(timezone)
-    # timezone = app.extract_message("SparkBot /time", incoming_msg.text).strip()
 
     # Craft REST API URL to retrieve current time
     #   Using API from http://worldclockapi.com
     base_url = "http://worldtimeapi.org/api/timezone/"
-
     url = f"{base_url}{timezone}"
 
     r = requests.get(url)
 
-    print(r)
-    print(r.text)
-    print(dir(r))
-    print(json.dumps(r.json(), indent=4))
-    print(r.ok)
-
-    # If an invalid timezone is provided, the serviceResponse will include
-    # error message
-    # if r["serviceResponse"]:
-    #     return "Error: " + r["serviceResponse"]
-    #
-    # # Format of returned data is "YYYY-MM-DDTHH:MM<OFFSET>"
-    # #   Example "2018-11-11T22:09-05:00"
-    # returned_data = r["currentDateTime"].split("T")
-    # cur_date = returned_data[0]
-    # cur_time = returned_data[1][:5]
-    # timezone_name = r["timeZoneName"]
-    #
-    # # Craft a reply string.
-    # reply = "In {TZ} it is currently {TIME} on {DATE}.".format(
-    #     TZ=timezone_name, TIME=cur_time, DATE=cur_date
-    # )
+    # print(r)
+    # print(r.text)
+    # print(dir(r))
+    # print(json.dumps(r.json(), indent=4))
+    # print(r.ok)
 
     if r.ok:
         resp_json = r.json()
@@ -85,8 +64,7 @@ def get_time(msg):
                 f"\n\tWeek Number is {resp_json['week_number']}"
     else:
         reply = f"ERROR! Response: {r}\n"
-
-    print(reply)
+    # print(reply)
 
     return reply
 
