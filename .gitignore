@@ -8,3 +8,4 @@ env*
 flaskapp.sock
 .env
 ntc-templates/*
+./ntc-templates/*

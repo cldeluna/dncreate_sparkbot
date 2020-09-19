@@ -927,77 +927,10 @@ def check_ips(siteid):
 
     return summary_string
 
-# def comic_strip():
-#     """
-#
-#     :return:
-#     """
-#     url = "https://pnpninja-daily-comicstrips-v1.p.rapidapi.com/getComicLinks"
-#
-#     headers = {
-#         'x-rapidapi-host': "pnpninja-daily-comicstrips-v1.p.rapidapi.com",
-#         'x-rapidapi-key': "a862c6f3bemsh13a0a0ea16b0110p1ce61fjsn2fa588e94531"
-#     }
-#
-#     response = requests.request("GET", url, headers=headers)
-#
-#     print(response.text)
-#
-#     return response
-
 
 def main():
 
-    # # rest_api_call(url, payload="", cookie="", type="GET", content_type="text/plain" ):
-    # url = "https://sandboxapicdc.cisco.com/api/aaaLogin.json"
-    # payload = "{\"aaaUser\": {\"attributes\": {\"name\": \"admin\", \"pwd\": \"ciscopsdt\"}}}"
-    #
-    # print(payload)
-
-    #
-    # c = rest_api_call(url, payload=payload, type="POST")
-    # cjson = c.json()
-    # print(c)
-    # print(c.status_code)
-    # print(cjson['imdata'][0]['aaaLogin']['attributes']['token'])
-
-    # dotenv.load_dotenv()
-    #
-    # p1 = r'{"aaaUser": {"attributes": {"name": "'
-    # p2 = os.getenv('APIC_USER')
-    # p3 = r'", "pwd": "'
-    # p4 = os.getenv('APIC_PWD')
-    # p5 = r'"}}}'
-    #
-    # payload = p1 + p2 + p3 + p4 + p5
-    # print(payload)
-
-    # payload = '{\"aaaUser\": {\"attributes\": {\"name\": \"' + os.getenv('APIC_USER') + '\", \"pwd\": \"' + os.getenv(
-    #     'APIC_PWD') + '\"}}}'
-    url = "https://sandboxapicdc.cisco.com/api/aaaLogin.json"
-
-    # payload = {
-    #     "aaaUser": {
-    #         "attributes": {
-    #             "name": os.getenv('APIC_USER'),
-    #             "pwd": os.getenv('APIC_PWD')
-    #         }
-    #     }
-    # }
-
-    # print(str(payload))
-    #
-    # c = rest_api_call(url, payload=payload, type="POST")
-    # cjson = c.json()
-    # print(c)
-    # print(c.status_code)
-    # print(cjson['imdata'][0]['aaaLogin']['attributes']['token'])
-
-    # resp = tz()
-    # print(resp)
-    # print(resp.text)
-
-    get_time("SparkBot /time EST")
+    print("Called Directly.\nIn MAIN...")
 
 # Standard call to the main() function.
 if __name__ == '__main__':

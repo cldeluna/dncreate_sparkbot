@@ -249,6 +249,9 @@ def l3_sum(incoming_msg):
     return response
 
 
+def l3_report(incoming_mgs):
+    pass
+
 def sdwan_report(incoming_msg):
     """
     Main function called by the Bot Menu to generate SD WAN report.
@@ -383,20 +386,19 @@ app = TeamsBot(
 # Set the bot greeting.
 app.set_greeting(greeting)
 
-# Create help message for current_time command
-current_time_help = "Look up the current time for a given timezone. "
-current_time_help += "_Example: **/time EST**_"
-app.add_command("/time", current_time_help, current_time)
+app.add_command("/time", "Get Time, Date, and Week information for a Timezone.\nExample: /time EST", current_time)
 
 app.add_command("/greeting", "Bot Greeting", greeting)
 
-app.add_command("/debug_data", "Debug Data", debug_data)
+app.add_command("/debug_data", "Debug Data. Examples of accessing Space specific data.", debug_data)
 
 app.add_command("/need_comic", "Need some random comic relief", need_comic)
 
 app.add_command("/aci_health", "Check Overall Health of the DevNet Always On APIC", aci_health)
 
-app.add_command("/l3_sum", "Generate Layer 3 Subnet Summary report", l3_sum)
+app.add_command("/l3_sum", "Show Routable Interfaces on device", l3_sum)
+
+app.add_command("/l3_report", "Device Routable Interfaces Report", l3_report)
 
 if __name__ == "__main__":
 
