@@ -23,6 +23,73 @@ import re
 import difflib
 import requests
 import dotenv
+import json
+
+
+def get_time(msg):
+    """
+    Sample function that returns the current time for a provided timezone
+    :param incoming_msg: The incoming message object from Teams
+    :return: A Response object based reply
+    """
+    # Extract the message content, without the command "/time"
+
+    # message = msg.text.split()
+    message = msg.split()
+    timezone = message[2]
+    print(timezone)
+    # timezone = app.extract_message("SparkBot /time", incoming_msg.text).strip()
+
+    # Craft REST API URL to retrieve current time
+    #   Using API from http://worldclockapi.com
+    base_url = "http://worldtimeapi.org/api/timezone/"
+
+    url = f"{base_url}{timezone}"
+
+    r = requests.get(url)
+
+    print(r)
+    print(r.text)
+    print(dir(r))
+    print(json.dumps(r.json(), indent=4))
+    print(r.ok)
+
+    # If an invalid timezone is provided, the serviceResponse will include
+    # error message
+    # if r["serviceResponse"]:
+    #     return "Error: " + r["serviceResponse"]
+    #
+    # # Format of returned data is "YYYY-MM-DDTHH:MM<OFFSET>"
+    # #   Example "2018-11-11T22:09-05:00"
+    # returned_data = r["currentDateTime"].split("T")
+    # cur_date = returned_data[0]
+    # cur_time = returned_data[1][:5]
+    # timezone_name = r["timeZoneName"]
+    #
+    # # Craft a reply string.
+    # reply = "In {TZ} it is currently {TIME} on {DATE}.".format(
+    #     TZ=timezone_name, TIME=cur_time, DATE=cur_date
+    # )
+
+    if r.ok:
+        resp_json = r.json()
+        # Format of returned data is "YYYY-MM-DDTHH:MM<OFFSET>"
+        #   Example "2018-11-11T22:09-05:00"
+        returned_data = resp_json["datetime"].split("T")
+        cur_date = returned_data[0]
+        cur_time = returned_data[1][:5]
+
+        # Craft a reply string.
+        reply = f"Timezone: {resp_json['timezone']} \n\tCurrent time is {cur_time} \n\tCurrent date is {cur_date} " \
+                f"\n\tUTC Offset is {resp_json['utc_offset']}" \
+                f"\n\tWeek Number is {resp_json['week_number']}"
+    else:
+        reply = f"ERROR! Response: {r}\n"
+
+    print(reply)
+
+    return reply
+
 
 def rest_api_call(url, payload={}, cookie="", type="GET", content_type="text/plain" ):
     """
@@ -915,16 +982,16 @@ def main():
     # print(c.status_code)
     # print(cjson['imdata'][0]['aaaLogin']['attributes']['token'])
 
-    dotenv.load_dotenv()
-
-    p1 = r'{"aaaUser": {"attributes": {"name": "'
-    p2 = os.getenv('APIC_USER')
-    p3 = r'", "pwd": "'
-    p4 = os.getenv('APIC_PWD')
-    p5 = r'"}}}'
-
-    payload = p1 + p2 + p3 + p4 + p5
-    print(payload)
+    # dotenv.load_dotenv()
+    #
+    # p1 = r'{"aaaUser": {"attributes": {"name": "'
+    # p2 = os.getenv('APIC_USER')
+    # p3 = r'", "pwd": "'
+    # p4 = os.getenv('APIC_PWD')
+    # p5 = r'"}}}'
+    #
+    # payload = p1 + p2 + p3 + p4 + p5
+    # print(payload)
 
     # payload = '{\"aaaUser\": {\"attributes\": {\"name\": \"' + os.getenv('APIC_USER') + '\", \"pwd\": \"' + os.getenv(
     #     'APIC_PWD') + '\"}}}'
@@ -939,13 +1006,19 @@ def main():
     #     }
     # }
 
-    print(str(payload))
+    # print(str(payload))
+    #
+    # c = rest_api_call(url, payload=payload, type="POST")
+    # cjson = c.json()
+    # print(c)
+    # print(c.status_code)
+    # print(cjson['imdata'][0]['aaaLogin']['attributes']['token'])
 
-    c = rest_api_call(url, payload=payload, type="POST")
-    cjson = c.json()
-    print(c)
-    print(c.status_code)
-    print(cjson['imdata'][0]['aaaLogin']['attributes']['token'])
+    # resp = tz()
+    # print(resp)
+    # print(resp.text)
+
+    get_time("SparkBot /time EST")
 
 # Standard call to the main() function.
 if __name__ == '__main__':

@@ -39,7 +39,7 @@ def greeting(incoming_msg):
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
-    response.markdown = f"Hello {sender.displayName} in room {room.title} I'm your Chat Bot and I'm here to help!\n "
+    response.markdown = f"Hello {sender.displayName} in room {room.title} I'm your SparkBot and I'm here to help!\n "
 
     response.markdown += f"\nSee what I can do by asking for **/help**.\n"
     #response.markdown += f"\n===Start Data Structure Output\nincoming_msg:\n{incoming_msg} \nsender object:\n {sender}\nroom object:\n {room}\n===END Data Structure Output"
@@ -161,37 +161,13 @@ def current_time(incoming_msg):
     :param incoming_msg: The incoming message object from Teams
     :return: A Response object based reply
     """
-    # Extract the message content, without the command "/time"
 
-    message = incoming_msg.text.split()
-    timezone = message[2]
-    #timezone = app.extract_message("SparkBot /time", incoming_msg.text).strip()
+    reply = bot_functions.get_time(incoming_msg)
 
-    # Craft REST API URL to retrieve current time
-    #   Using API from http://worldclockapi.com
-    u = "http://worldclockapi.com/api/json/{timezone}/now".format(
-        timezone=timezone
-    )
-    u = f"http://worldtimeapi.org/api/timezone"
-    r = requests.get(u).json()
+    response = Response()
+    response.markdown = f"\n{reply}\n"
 
-    # If an invalid timezone is provided, the serviceResponse will include
-    # error message
-    if r["serviceResponse"]:
-        return "Error: " + r["serviceResponse"]
-
-    # Format of returned data is "YYYY-MM-DDTHH:MM<OFFSET>"
-    #   Example "2018-11-11T22:09-05:00"
-    returned_data = r["currentDateTime"].split("T")
-    cur_date = returned_data[0]
-    cur_time = returned_data[1][:5]
-    timezone_name = r["timeZoneName"]
-
-    # Craft a reply string.
-    reply = "In {TZ} it is currently {TIME} on {DATE}.".format(
-        TZ=timezone_name, TIME=cur_time, DATE=cur_date
-    )
-    return reply
+    return response
 
 
 def need_comic(incoming_msg):
@@ -224,9 +200,9 @@ def need_comic(incoming_msg):
     return response
 
 
-def sdwan_report(incoming_msg):
+def l3_sum(incoming_msg):
     """
-    Main function called by the Bot Menu to generate SD WAN report.
+    Main function called by the Bot Menu to generate L3 Subnet Summary report.
     This function calls the bot_functions.conn_matrix function for the actual processing
 
     :param incoming_msg:
@@ -237,7 +213,7 @@ def sdwan_report(incoming_msg):
     msg = ''
     message = incoming_msg.text.split()
 
-    # Loopkup details about sender
+    # Lookup details about sender
     sender = app.teams.people.get(incoming_msg.personId)
     room = app.teams.rooms.get(incoming_msg.roomId)
 
@@ -270,6 +246,54 @@ def sdwan_report(incoming_msg):
     if match:
         response.files = f"./{site_id}_sdwan_report.txt"
 
+    return response
+
+
+def sdwan_report(incoming_msg):
+    """
+    Main function called by the Bot Menu to generate SD WAN report.
+    This function calls the bot_functions.conn_matrix function for the actual processing
+
+    :param incoming_msg:
+    :return:
+    """
+
+    # Get sent message
+    msg = ''
+    message = incoming_msg.text.split()
+
+    # Lookup details about sender
+    sender = app.teams.people.get(incoming_msg.personId)
+    room = app.teams.rooms.get(incoming_msg.roomId)
+
+    # if length of split message is greater than 2 elements then the function is being passed a site id parameter
+    if len(message) > 2:
+        siteid = message[2]
+        room_title = siteid
+    # Otherwise extract site id from room information
+    else:
+        site_id, id_match = get_siteid(room)
+        room_title = room.title
+
+    regexp = r"\d{4}"
+    match = re.search(regexp, room_title)
+
+    if match:
+        site_id = match.group()
+        response_data = bot_functions.conn_matrix(site_id)
+    else:
+        site_id = f"ERROR"
+        response_data = f"ERROR:  Bot function was passed something that was not understood: {incoming_msg.text}.  " \
+            f"\n\rIf you are not in an NT3 space please provide the 4 digit site code."
+
+    # response_data += f"match is {match}\nsite_id is {site_id}\n room_title is {room_title}"
+
+    # Create a Response object and craft a reply in Markdown.
+    response = Response()
+    response.markdown = f"\n{response_data}\n"
+
+    if match:
+        response.files = f"./{site_id}_sdwan_report.txt"
 
     return response
 
@@ -372,6 +396,7 @@ app.add_command("/need_comic", "Need some random comic relief", need_comic)
 
 app.add_command("/aci_health", "Check Overall Health of the DevNet Always On APIC", aci_health)
 
+app.add_command("/l3_sum", "Generate Layer 3 Subnet Summary report", l3_sum)
 
 if __name__ == "__main__":
 
