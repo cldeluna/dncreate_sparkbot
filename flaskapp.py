@@ -39,7 +39,7 @@ def greeting(incoming_msg):
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
-    response.markdown = f"Hello {sender.displayName} in room {room.title} I'm your SparkBot and I'm here to help!\n "
+    response.markdown = f"\nHello {sender.displayName} in room {room.title}! \nI'm your SparkBot and I'm here to help!\n "
 
     response.markdown += f"\nSee what I can do by asking for **/help**.\n"
     #response.markdown += f"\n===Start Data Structure Output\nincoming_msg:\n{incoming_msg} \nsender object:\n {sender}\nroom object:\n {room}\n===END Data Structure Output"

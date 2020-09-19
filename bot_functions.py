@@ -63,7 +63,8 @@ def get_time(msg):
                 f"\n\tUTC Offset is {resp_json['utc_offset']}" \
                 f"\n\tWeek Number is {resp_json['week_number']}"
     else:
-        reply = f"ERROR! Response: {r}\n"
+        reply = f"ERROR! Response: {r}\nPlease use the correct timezone.  " \
+                f"See [Canonical Timezone List](http://worldtimeapi.org/timezones)."
     # print(reply)
 
     return reply
