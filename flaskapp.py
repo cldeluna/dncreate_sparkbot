@@ -224,7 +224,7 @@ def l3_sum(incoming_msg):
     for line in l3_int_list:
         response.markdown += f"{line}\n"
 
-    response.files = f"./{l3_device}_int_report.txt"
+    # response.files = f"./{l3_device}_int_report.txt"
 
     return response
 
