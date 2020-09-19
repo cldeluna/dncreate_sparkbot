@@ -35,7 +35,7 @@ def greeting(incoming_msg):
     # Loopkup details about sender
     sender = app.teams.people.get(incoming_msg.personId)
     room = app.teams.rooms.get(incoming_msg.roomId)
-    site_id, match = get_siteid(room)
+    # site_id, match = get_siteid(room)
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
