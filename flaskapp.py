@@ -215,7 +215,7 @@ def l3_sum(incoming_msg):
 
     room_title = room.title
 
-    l3_device, l3_int_list = bot_functions.l3_ints(incoming_msg)
+    l3_device, l3_int_list, resp, fn = bot_functions.l3_ints(incoming_msg)
 
     # Create a Response object and craft a reply in Markdown.
     response = Response()
