@@ -100,8 +100,8 @@ def l3_ints(msg):
     sec = os.environ.get('NXOS_PWD')
 
     # Extract the message content, without the command "/xxxx"
-    message = msg.text.split()
-    # message = msg.split()
+    # message = msg.text.split()
+    message = msg.split()
     device = message[2].strip()
     print(device)
 
@@ -113,7 +113,19 @@ def l3_ints(msg):
         'secret' : sec,
         'port' : 8181
     }
+
+    # dev = {
+    #     'device_type': 'cisco_ios',
+    #     'ip' : '10.1.10.102',
+    #     'username' : "cisco",
+    #     'password' : "cisco",
+    #     'secret' : "cisco",
+    #     'port' : 22
+    # }
+
     l3_ints_list = []
+    response = ["No_Response"]
+    filename = "No_File_Saved"
     if device == dev['ip']:
 
         print(f"\n===============  Netmiko with TEXTFSM OPTION  ===============")
@@ -126,23 +138,46 @@ def l3_ints(msg):
             # print(response)
             # print(len(response))
 
+            # Save response to JSON file
+            today = str(datetime.date.today())
+            filename = f"{device}-response-{today}.json"
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(response, f, ensure_ascii=False, indent=4)
+
+            #For show ip route
             for dev_int in response:
                 # print(f"{json.dumps(dev_int, indent=4, sort_keys=True)}")
                 if dev_int['protocol'] == "direct" or dev_int['protocol'] == "local":
                     interface_text = f"{dev_int['nexthop_if']}   {dev_int['network']}/{dev_int['mask']}    {dev_int['nexthop_ip']}    {dev_int['vrf']}"
                     l3_ints_list.append(interface_text)
 
-            return device, l3_ints_list
+            # For show ip interface
+            # for dev_int in response:
+            #     # print(f"{json.dumps(dev_int, indent=4, sort_keys=True)}")
+            #     if dev_int['ipaddr']:
+            #         interface_text = f"{dev_int['intf']}   {dev_int['ipaddr'][0]}/{dev_int['mask'][0]}    {dev_int['link_status']}   {dev_int['protocol_status']}     {dev_int['vrf']}"
+            #         l3_ints_list.append(interface_text)
+
+            return device, l3_ints_list, response, filename
 
         except Exception as e:
             print(f"Exception: {e}")
             l3_ints_list.append(f"Error Connecting to device {device}!")
-            return device, l3_ints_list
+            return device, l3_ints_list, response, filename
 
     else:
         print("Device Not in Topology. Unknown Device.")
         l3_ints_list.append(f"Device {device} Not in Topology. Unknown Device.")
-        return device, l3_ints_list
+        return device, l3_ints_list, response, filename
+
+
+def int_diagram():
+    pass
+
+    # Get the payload
+
+
+    #
 
 
 def diff_config_processing(dev_action, site_id):
@@ -980,14 +1015,19 @@ def check_ips(siteid):
     return summary_string
 
 
+
+
 def main():
 
     print("Called Directly.\nIn MAIN...")
 
     dotenv.load_dotenv()
-    device, l3 = l3_ints("Sparkbot /l3sum sbx-nxos-mgmt.cisco.com")
+    device, l3, resp, fn = l3_ints("Sparkbot /l3sum sbx-nxos-mgmt.cisco.com")
     print(device)
     print(l3)
+    print(resp)
+    print(f"{json.dumps(resp, indent=4, sort_keys=True)}")
+    print(fn)
 
 
 # Standard call to the main() function.

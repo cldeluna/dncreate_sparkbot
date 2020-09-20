@@ -1,0 +1,37 @@
+strict graph "" {
+	graph [color=red,
+		fontname=arial,
+		label="sbx-nxos-mgmt.cisco.com Interface Diagram",
+		splines=compound
+	];
+	node [label="\N"];
+	"sbx-nxos-mgmt.cisco.com"	[color="#ffffff",
+		image="./images/black_router_128.png",
+		label="sbx-nxos-mgmt.cisco.com",
+		labelloc=b];
+	"Lo98-10.98.98.0/24"	[color="#ffffff",
+		image="./images/ip_icon_48.png",
+		label="Lo98-10.98.98.0/24",
+		labelloc=t];
+	"sbx-nxos-mgmt.cisco.com" -- "Lo98-10.98.98.0/24";
+	"Lo98-10.98.98.1/32"	[color="#ffffff",
+		image="./images/ip_icon_48.png",
+		label="Lo98-10.98.98.1/32",
+		labelloc=t];
+	"sbx-nxos-mgmt.cisco.com" -- "Lo98-10.98.98.1/32";
+	"Lo99-10.99.99.0/24"	[color="#ffffff",
+		image="./images/ip_icon_48.png",
+		label="Lo99-10.99.99.0/24",
+		labelloc=t];
+	"sbx-nxos-mgmt.cisco.com" -- "Lo99-10.99.99.0/24";
+	"Lo99-10.99.99.1/32"	[color="#ffffff",
+		image="./images/ip_icon_48.png",
+		label="Lo99-10.99.99.1/32",
+		labelloc=t];
+	"sbx-nxos-mgmt.cisco.com" -- "Lo99-10.99.99.1/32";
+	"Lo1-172.16.0.1/32"	[color="#ffffff",
+		image="./images/ip_icon_48.png",
+		label="Lo1-172.16.0.1/32",
+		labelloc=t];
+	"sbx-nxos-mgmt.cisco.com" -- "Lo1-172.16.0.1/32";
+}
