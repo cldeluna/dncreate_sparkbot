@@ -226,7 +226,7 @@ def l3_sum(incoming_msg):
         response.markdown += f"{line}\n"
 
     # response.files = f"./{l3_device}_int_report.txt"
-    response.files.append("Interface_diagram.png")
+    response.files.append('./Interface_Diagram.png')
 
     return response
 
