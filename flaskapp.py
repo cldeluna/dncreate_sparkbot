@@ -170,7 +170,7 @@ def aci_faults(incoming_msg):
 
     response.markdown = f"### DevNet ACI Sandbox Fabric Faults: \nTotal Faults: {health_obj_json['totalCount']}"
     for line in health_obj_json['imdata']:
-        response.markdown += f"\n{line['faultSummary']['attributes']['code']} " \
+        response.markdown += f"\n#### {line['faultSummary']['attributes']['code']} " \
                              f"{line['faultSummary']['attributes']['cause']} " \
                              f"{line['faultSummary']['attributes']['severity']} " \
                              f"\n\t * {line['faultSummary']['attributes']['descr']}"
