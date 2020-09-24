@@ -429,6 +429,8 @@ app.add_command("/need_comic", "Need some random comic relief", need_comic)
 
 app.add_command("/aci_health", "Check Overall Health of the DevNet Always On APIC", aci_health)
 
+app.add_command("/aci_faults", "List top 15 Faults on DevNet Always On APIC", aci_faults)
+
 app.add_command("/l3_sum", "Show Routable Interfaces on device", l3_sum)
 
 app.add_command("/l3_report", "Device Routable Interfaces Report", l3_report)
