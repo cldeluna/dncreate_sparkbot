@@ -130,6 +130,57 @@ def aci_health(incoming_msg):
     return response
 
 
+def aci_faults(incoming_msg):
+    """
+    Sample function to check Fault Summary of DevNet Always On Sandbox APIC via REST call.
+    :param incoming_msg: The incoming message object from Teams
+    :return: A text or markdown based reply
+    """
+
+    # Split incoming message into a list of its component so we can strip off Bot Name, command, and get to the
+    # parameters.  In this case any additional parameter will be interpreted as debug.
+
+    message = incoming_msg.text.split()
+
+
+    url = "https://sandboxapicdc.cisco.com/api/aaaLogin.json"
+
+    p1 = r'{"aaaUser": {"attributes": {"name": "'
+    p2 = os.getenv('APIC_USER')
+    p3 = r'", "pwd": "'
+    p4 = os.getenv('APIC_PWD')
+    p5 = r'"}}}'
+
+    payload = p1 + p2 + p3 + p4 + p5
+
+    c = bot_functions.rest_api_call(url, payload=payload, type="POST")
+    cjson = c.json()
+
+    status_code = c.status_code
+    token = cjson['imdata'][0]['aaaLogin']['attributes']['token']
+
+    url = "https://sandboxapicdc.cisco.com/api/node/class/faultSummary.json?order-by=faultSummary.severity|desc&page=0&page-size=15"
+    payload = {}
+    cookie = f"APIC-cookie={token}"
+    health_obj = bot_functions.rest_api_call(url, payload=payload, cookie=cookie)
+
+    # Create a Response object and craft a reply in Markdown.
+    response = Response()
+    health_obj_json = health_obj.json()
+
+    response.markdown = f"DevNet ACI Sandbox Fabric Faults: \nTotal Faults: {health_obj_json['totalCount']}"
+    for line in health_obj_json['imdata']:
+        response.markdown += f"\n{line['faultSummary']['attributes']['code']} " \
+                             f"{line['faultSummary']['attributes']['cause']} " \
+                             f"{line['faultSummary']['attributes']['severity']} " \
+                             f"\n\t {line['faultSummary']['attributes']['descr']}"
+
+    if len(message) > 2:
+        response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}```\n"
+
+    return response
+
+
 # An example using a Response object.  Response objects allow more complex
 # replies including sending files, html, markdown, or text. Rsponse objects
 # can also set a roomId to send response to a different room from where
