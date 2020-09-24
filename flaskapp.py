@@ -168,12 +168,12 @@ def aci_faults(incoming_msg):
     response = Response()
     health_obj_json = health_obj.json()
 
-    response.markdown = f"DevNet ACI Sandbox Fabric Faults: \nTotal Faults: {health_obj_json['totalCount']}"
+    response.markdown = f"### DevNet ACI Sandbox Fabric Faults: \nTotal Faults: {health_obj_json['totalCount']}"
     for line in health_obj_json['imdata']:
         response.markdown += f"\n{line['faultSummary']['attributes']['code']} " \
                              f"{line['faultSummary']['attributes']['cause']} " \
                              f"{line['faultSummary']['attributes']['severity']} " \
-                             f"\n\t {line['faultSummary']['attributes']['descr']}"
+                             f"\n\t * {line['faultSummary']['attributes']['descr']}"
 
     if len(message) > 2:
         response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}```\n"
