@@ -1017,8 +1017,6 @@ def check_ips(siteid):
     return summary_string
 
 
-
-
 def main():
 
     print("Called Directly.\nIn MAIN...")
