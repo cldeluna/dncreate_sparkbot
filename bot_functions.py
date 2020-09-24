@@ -102,8 +102,11 @@ def l3_ints(msg):
     # Extract the message content, without the command "/xxxx"
     message = msg.text.split()
     # message = msg.split()
-    device = message[2].strip()
-    print(device)
+    if len(message) >= 3:
+        device = message[2].strip()
+        # print(device)
+    else:
+        device = "sbx-nxos-mgmt.cisco.com"
 
     dev = {
         'device_type': 'cisco_nxos',
@@ -177,7 +180,6 @@ def int_diagram():
     # Get the payload
 
 
-    #
 
 
 def diff_config_processing(dev_action, site_id):
@@ -1022,34 +1024,34 @@ def main():
     print("Called Directly.\nIn MAIN...")
 
     dotenv.load_dotenv()
-    # device, l3, resp, fn = l3_ints("Sparkbot /l3sum sbx-nxos-mgmt.cisco.com")
-    # print(device)
-    # print(l3)
-    # print(resp)
-    # print(f"{json.dumps(resp, indent=4, sort_keys=True)}")
-    # print(fn)
+    device, l3, resp, fn = l3_ints("Sparkbot /l3sum sbx-nxos-mgmt.cisco.com")
+    print(device)
+    print(l3)
+    print(resp)
+    print(f"{json.dumps(resp, indent=4, sort_keys=True)}")
+    print(fn)
 
-    url = "https://sandboxapicdc.cisco.com/api/aaaLogin.json"
-    payload = "{\"aaaUser\": {\"attributes\": {\"name\": \"admin\", \"pwd\": \"ciscopsdt\"}}}"
-    c = rest_api_call(url, payload=payload, type="POST")
-    cjson = c.json()
-
-    status_code = c.status_code
-    token = cjson['imdata'][0]['aaaLogin']['attributes']['token']
-
-    url = "https://sandboxapicdc.cisco.com/api/node/class/faultSummary.json?order-by=faultSummary.severity|desc&page=0&page-size=15"
-    payload = {}
-    cookie = f"APIC-cookie={token}"
-    health_obj = rest_api_call(url, payload=payload, cookie=cookie)
-
-    print(health_obj)
-    print(health_obj.json())
-    data = health_obj.json()
-    print(data.keys())
-    print(len(data['imdata']))
-    for line in data['imdata']:
-        print(f"\n{line['faultSummary']['attributes']['code']} {line['faultSummary']['attributes']['cause']} {line['faultSummary']['attributes']['severity']} "
-              f"\n\t {line['faultSummary']['attributes']['descr']}")
+    # url = "https://sandboxapicdc.cisco.com/api/aaaLogin.json"
+    # payload = "{\"aaaUser\": {\"attributes\": {\"name\": \"admin\", \"pwd\": \"ciscopsdt\"}}}"
+    # c = rest_api_call(url, payload=payload, type="POST")
+    # cjson = c.json()
+    #
+    # status_code = c.status_code
+    # token = cjson['imdata'][0]['aaaLogin']['attributes']['token']
+    #
+    # url = "https://sandboxapicdc.cisco.com/api/node/class/faultSummary.json?order-by=faultSummary.severity|desc&page=0&page-size=15"
+    # payload = {}
+    # cookie = f"APIC-cookie={token}"
+    # health_obj = rest_api_call(url, payload=payload, cookie=cookie)
+    #
+    # print(health_obj)
+    # print(health_obj.json())
+    # data = health_obj.json()
+    # print(data.keys())
+    # print(len(data['imdata']))
+    # for line in data['imdata']:
+    #     print(f"\n{line['faultSummary']['attributes']['code']} {line['faultSummary']['attributes']['cause']} {line['faultSummary']['attributes']['severity']} "
+    #           f"\n\t {line['faultSummary']['attributes']['descr']}")
 
 
 # Standard call to the main() function.

@@ -125,7 +125,7 @@ def aci_health(incoming_msg):
                         f"\n\tAvg:\t{health_obj_json['imdata'][0]['fabricOverallHealthHist5min']['attributes']['healthAvg']}"
 
     if len(message) > 2:
-        response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}```\n"
+        response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}\n"
 
     return response
 
@@ -175,8 +175,8 @@ def aci_faults(incoming_msg):
                              f"{line['faultSummary']['attributes']['severity']} " \
                              f"\n\t * {line['faultSummary']['attributes']['descr']}"
 
-    if len(message) > 2:
-        response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}```\n"
+    # if len(message) > 2:
+    #     response.markdown += f"\nDebug: \n```{json.dumps(health_obj.json(), indent=4, sort_keys=True)}```\n"
 
     return response
 
